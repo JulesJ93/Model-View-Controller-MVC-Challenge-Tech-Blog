@@ -34,3 +34,25 @@ router.get("/", (req, res) => {
             res.status(500).json(err);
         });
 });
+
+// Get a single post
+router.get("/:id", (req, res) => {
+    Post.findOne({
+            where: {
+                id: req.params.id,
+            },
+            attributes: ["id", "content", "title", "created_at"],
+            include: [{
+                    model: User,
+                    attributes: ["username"],
+                },
+                {
+                    model: Comment,
+                    attributes: ["id", "comment_text", "post_id", "user_id", "created_at"],
+                    include: {
+                        model: User,
+                        attributes: ["username"],
+                    },
+                },
+            ],
+        })
